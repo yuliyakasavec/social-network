@@ -7,6 +7,7 @@ const Dialogs = ({ state: { messages, dialogs } }) => {
   let dialogsElements = dialogs.map((d) => (
     <DialogItem name={d.name} id={d.id} />
   ));
+  ///testststete
 
   return (
     <div className={s.dialogs}>

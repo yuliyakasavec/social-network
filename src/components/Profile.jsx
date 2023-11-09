@@ -1,6 +1,8 @@
+import classes from './Profile.module.css';
+
 const Profile = () => {
     return (
-      <div className='content'>
+      <div className={classes.content}>
       <div>
       <img src='https://shop-cdn1-2.vigbo.tech/shops/2544/products/16486697/images/3-9f0ed407d8ba2537f38b8b2d9765ccdb.jpg' />
       </div>
@@ -12,11 +14,11 @@ const Profile = () => {
         <div>
           New post
         </div>
-        <div>
-          <div>
+        <div className={classes.posts}>
+          <div className={classes.item}>
             post 1
           </div>
-          <div>
+          <div className={classes.item}>
             post 2
           </div>
         </div>

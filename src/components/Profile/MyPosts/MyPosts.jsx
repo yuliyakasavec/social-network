@@ -1,10 +1,10 @@
 import classes from './MyPosts.module.css';
 import Post from './Post/Post';
 
-let props = {
-  message: 'Hi, how are you?',
-  likeCount: '30'
-}
+// let props = {
+//   message: 'Hi, how are you?',
+//   likeCount: '30'
+// }
 const MyPosts = (props) => {
     return (
       <div>

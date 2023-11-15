@@ -12,3 +12,25 @@
 .item a:focus {
   color: rgb(246, 232, 152);
 }
+
+.photos {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+}
+
+.photos img{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  padding-right: 5px;
+}
+
+.side {
+  margin-top: 50px;
+  color: white;
+}
+
+.photos {
+  color: rgb(131, 134, 167);
+}

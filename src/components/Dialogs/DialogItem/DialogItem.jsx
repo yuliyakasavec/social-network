@@ -4,6 +4,7 @@ import classes from "./../Dialogs.module.css";
 const DialogItem = (props) => {
   return (
     <div className={`${classes.dialog} ${classes.active}`}>
+      <img src={props.avatar} />
       <NavLink to={"/dialogs/" + props.id}>{props.name}</NavLink>
     </div>
   );

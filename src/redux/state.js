@@ -10,7 +10,7 @@ let state = {
       { id: 5, message: "Nice to meet you" },
       { id: 6, message: "Ok" },
     ],
-    newPostValue: ''
+    newPostText: 'it-kamasutra.com'
   },
   dialogsPage: {
     messages: [
@@ -43,16 +43,17 @@ let state = {
 export let addPost = () => {
   let newPost = {
     id: 5,
-    message: state.profilePage.newPostValue,
+    message: state.profilePage.newPostText,
     likesCount: 0
   };
 
   state.profilePage.posts.push(newPost);
+  state.profilePage.newPostText = '';
   rerenderEntireTree(state);
 }
 
-export let changeTextarea = (newMessage) => {
-  state.profilePage.newPostValue=newMessage;
+export let updateNewPostText = (newText) => {
+  state.profilePage.newPostText = newText;
 }
 
 export default state;

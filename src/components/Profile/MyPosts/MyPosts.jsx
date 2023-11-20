@@ -8,12 +8,7 @@ import React, { useRef, useState } from "react";
 // }
 const MyPosts = (props) => {
 
-console.log(props.newPostValue)
-
-  const [posts, setPosts] = useState(props.posts); 
-
-
-  let postsElements = posts.map((p) => (
+  let postsElements = props.posts.map((p) => (
     <Post message={p.message} id={p.id} likesCount={p.likesCount} />
   ));
 
@@ -21,12 +16,11 @@ console.log(props.newPostValue)
 
   let addPost = () => {
     props.addPost();
-    newPostElement.current.value = '';
   };
 
-  let changeTextarea = (e) => {
-    let newElement = e.target.value;
-    props.changeTextarea(newElement)
+  let onPostChange = () => {
+    let text = newPostElement.current.value;
+    props.updateNewPostText(text);
   }
   
 
@@ -35,7 +29,7 @@ console.log(props.newPostValue)
       <h3>My posts</h3>
       <div>
         <div>
-          <textarea onChange={changeTextarea} ref={newPostElement}></textarea>
+          <textarea onChange={onPostChange} ref={newPostElement}></textarea>
         </div>
         <div>
           <button onClick={addPost}>Add post</button>

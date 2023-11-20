@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {addPost, changeTextarea} from './redux/state';
+import {addPost, updateNewPostText} from './redux/state';
 import { BrowserRouter } from 'react-router-dom';
 
 export let rerenderEntireTree = (state) => {
@@ -12,7 +12,7 @@ export let rerenderEntireTree = (state) => {
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-    <App state={state} addPost={addPost} changeTextarea={changeTextarea} />
+    <App state={state} addPost={addPost} updateNewPostText={updateNewPostText} />
     </BrowserRouter>
   </React.StrictMode>
 );

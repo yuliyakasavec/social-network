@@ -21,6 +21,7 @@ let state = {
       { id: 5, message: "Nice to meet you" },
       { id: 6, message: "Ok" },
     ],
+    newMessageText: 'My name is',
     dialogs: [
         { id: 1, name: "Yuliya", avatar: "https://rg.ru/uploads/images/122/97/48/10_86ad2d85.jpg" },
         { id: 2, name: "Denis", avatar: "https://ru.wikifur.com/w/images/thumb/3/39/Officer_Clawhauser.png/624px-Officer_Clawhauser.png" },
@@ -54,6 +55,23 @@ export let addPost = () => {
 
 export let updateNewPostText = (newText) => {
   state.profilePage.newPostText = newText;
+  rerenderEntireTree(state);
+}
+
+export let sendMessage = () => {
+  let newMessage = {
+    id: 7,
+    message: state.dialogsPage.newMessageText
+  }
+
+  state.dialogsPage.messages.push(newMessage);
+  state.dialogsPage.newMessageText = '';
+  rerenderEntireTree(state);
+}
+
+export let updateNewMessageText = (newMes) => {
+  state.dialogsPage.newMessageText = newMes;
+  rerenderEntireTree(state);
 }
 
 export default state;

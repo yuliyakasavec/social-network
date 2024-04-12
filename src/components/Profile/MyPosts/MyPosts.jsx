@@ -1,6 +1,6 @@
+import React from "react";
 import classes from "./MyPosts.module.css";
 import Post from "./Post/Post";
-import React, { useRef, useState } from "react";
 
 // let props = {
 //   message: 'Hi, how are you?',

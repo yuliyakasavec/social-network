@@ -4,7 +4,9 @@ import Friends from '../Friends/Friends';
 
 const Navbar = (props) => {
 
-  let sidebarElements = props.state.sidebar.map( s => <Friends name={s.name} id={s.id} avatar={s.avatar} />);
+console.log(props)
+
+  let sidebarElements = props.state.sidebar?.map( s => <Friends name={s.name} id={s.id} avatar={s.avatar} />);
 
     return (
       <nav className={classes.nav}>

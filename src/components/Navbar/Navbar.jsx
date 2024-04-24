@@ -6,7 +6,7 @@ const Navbar = (props) => {
 
 console.log(props)
 
-  let sidebarElements = props.state.sidebar?.map( s => <Friends name={s.name} id={s.id} avatar={s.avatar} />);
+  let sidebarElements = props.state?.sidebar.map( s => <Friends name={s.name} id={s.id} avatar={s.avatar} />);
 
     return (
       <nav className={classes.nav}>

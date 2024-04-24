@@ -20,7 +20,6 @@ let rerenderEntireTree = (state) => {
     </React.StrictMode>
   );
 };
-
 rerenderEntireTree(store.getState());
 
 store.subscribe(() => {

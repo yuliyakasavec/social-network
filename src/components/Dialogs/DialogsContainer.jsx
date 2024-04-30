@@ -1,4 +1,3 @@
-import React from "react";
 import {
   sendMessageActionCreator,
   updateNewMessageTextActionCreator,
@@ -15,12 +14,12 @@ let mapStateToProps = (state) => {
 
 let mapDispatchToProps = (dispatch) => {
   return {
-    updateNewMessageText: () => {
-      dispatch(sendMessageActionCreator());
-    },
-    sendMessage: (text) => {
+    updateNewMessageText: (text) => {
       let action = updateNewMessageTextActionCreator(text);
       dispatch(action);
+    },
+    sendMessage: () => {
+      dispatch(sendMessageActionCreator());
     },
   }
 }

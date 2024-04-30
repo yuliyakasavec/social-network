@@ -1,4 +1,3 @@
-import React from "react";
 import {
   addPostActionCreator,
   updateNewPostTextActionCreator,
@@ -19,7 +18,7 @@ let mapDispatchToProps = (dispatch) => {
     addPost: () => {
       dispatch(addPostActionCreator());
     },
-    onPostChange: (text) => {
+    updateNewPostText: (text) => {
       let action = updateNewPostTextActionCreator(text);
       dispatch(action);
     },

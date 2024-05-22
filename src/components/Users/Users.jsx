@@ -1,9 +1,12 @@
 import React from "react";
 import classes from "./Users.module.css";
 import userPhoto from "../../assets/images/user.png";
+import { NavLink } from "react-router-dom";
 
 let Users = (props) => {
-  let pagesCount = Math.ceil(Math.ceil(props.totalUsersCount/400) / props.pageSize);
+  let pagesCount = Math.ceil(
+    Math.ceil(props.totalUsersCount / 400) / props.pageSize
+  );
 
   let pages = [];
   for (let i = 1; i <= pagesCount; i++) {
@@ -16,9 +19,7 @@ let Users = (props) => {
         {pages.map((p) => {
           return (
             <span
-              className={
-                props.currentPage === p ? classes.selectedPage : ""
-              }
+              className={props.currentPage === p ? classes.selectedPage : ""}
               onClick={(e) => {
                 props.onPageChanged(p);
               }}
@@ -28,14 +29,15 @@ let Users = (props) => {
           );
         })}
       </div>
-      {props.users.map((u) => (
+      {
+      props.users.map((u) => (
         <div key={u.id}>
           <span>
             <div>
-              <img
-                src={u.photos.small != null ? u.photos.small : userPhoto}
-                className={classes.userPhoto}
-              />
+              <NavLink to={'/profile/' + u.id}>
+                <img src={u.photos.small != null ? u.photos.small : userPhoto}
+                  className={classes.userPhoto} />
+              </NavLink>
             </div>
             <div>
               {u.followed ? (

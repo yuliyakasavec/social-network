@@ -5,3 +5,9 @@
 .descriptionBlock {
   padding: 10px;
 }
+
+.color {
+  color: green;
+  font-weight: bold;
+  margin-right: 10px;
+}

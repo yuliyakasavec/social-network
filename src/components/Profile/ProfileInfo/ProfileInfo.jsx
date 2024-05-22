@@ -1,16 +1,29 @@
-import classes from './ProfileInfo.module.css';
+import Preloader from "../../common/Preloader/Preloader";
+import classes from "./ProfileInfo.module.css";
 
-const ProfileInfo = () => {
-    return (
+const ProfileInfo = (props) => {
+  if (!props.profile) {
+    return <Preloader />;
+  }
+
+  return (
+    <div>
       <div>
-      <div>
-      <img className={classes.contentImage} src='https://shop-cdn1-2.vigbo.tech/shops/2544/products/16486697/images/3-9f0ed407d8ba2537f38b8b2d9765ccdb.jpg' />
+        <img
+          className={classes.contentImage}
+          src="https://shop-cdn1-2.vigbo.tech/shops/2544/products/16486697/images/3-9f0ed407d8ba2537f38b8b2d9765ccdb.jpg"
+        />
       </div>
       <div className={classes.descriptionBlock}>
+        <img src={props.profile.photos.large} />
+        <div>
+        <span className={classes.color}>Моя страничка на фейсбуке:</span> 
+        <span>{props.profile.contacts.facebook}</span>
+        </div>
         ava + description
       </div>
     </div>
-    )
-}
+  );
+};
 
 export default ProfileInfo;

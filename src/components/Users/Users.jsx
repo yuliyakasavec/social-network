@@ -2,6 +2,7 @@ import React from "react";
 import classes from "./Users.module.css";
 import userPhoto from "../../assets/images/user.png";
 import { NavLink } from "react-router-dom";
+import { usersAPI } from "../../api/api";
 
 let Users = (props) => {
   let pagesCount = Math.ceil(
@@ -29,21 +30,28 @@ let Users = (props) => {
           );
         })}
       </div>
-      {
-      props.users.map((u) => (
+      {props.users.map((u) => (
         <div key={u.id}>
           <span>
             <div>
-              <NavLink to={'/profile/' + u.id}>
-                <img src={u.photos.small != null ? u.photos.small : userPhoto}
-                  className={classes.userPhoto} />
+              <NavLink to={"/profile/" + u.id}>
+                <img
+                  src={u.photos.small != null ? u.photos.small : userPhoto}
+                  className={classes.userPhoto}
+                />
               </NavLink>
             </div>
             <div>
               {u.followed ? (
                 <button
                   onClick={() => {
-                    props.unfollow(u.id);
+                    usersAPI
+                      .unfollow(u.id)
+                      .then((data) => {
+                        if (data.resultCode === 0) {
+                          props.unfollow(u.id);
+                        }
+                      });
                   }}
                 >
                   Unfollow
@@ -51,7 +59,13 @@ let Users = (props) => {
               ) : (
                 <button
                   onClick={() => {
-                    props.follow(u.id);
+                    usersAPI
+                      .follow(u.id)
+                      .then((data) => {
+                        if (data.resultCode === 0) {
+                          props.follow(u.id);
+                        }
+                      });
                   }}
                 >
                   Follow

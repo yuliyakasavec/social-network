@@ -15,7 +15,7 @@ const App = (props) => {
   return (
       <div className="app-wrapper">
         <HeaderContainer />
-        <Navbar state={props.state?.friendsPage} />
+        <Navbar />
         <div className="app-wrapper-content">
           <Routes>
             <Route path="/dialogs/*" element={<DialogsContainer />} />

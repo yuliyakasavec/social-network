@@ -16,7 +16,7 @@ let initialState = {
   ],
   newPostText: "it-kamasutra.com",
   profile: null,
-  status: ''
+  status: ""
 };
 
 const profileReducer = (state = initialState, action) => {

@@ -68,3 +68,20 @@ export const headerAPI = {
           });
     }
 }
+
+export const loginAPI = {
+  logIn(body) {
+    return instance
+        .post(`auth/login`, body)
+        .then((response) => {
+            return response.data;
+          });
+  },
+  logOut() {
+    return instance
+        .delete(`auth/login`)
+        .then((response) => {
+            return response.data;
+          });
+  }
+}

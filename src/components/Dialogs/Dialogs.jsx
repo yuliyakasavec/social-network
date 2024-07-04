@@ -3,12 +3,16 @@ import DialogItem from "./DialogItem/DialogItem";
 import classes from "./Dialogs.module.css";
 import Message from "./Message/Message";
 import React from "react";
+import { Textarea } from "../common/FormsControls/FormsControls";
+import { maxLengthCreator, required } from "../../utils/validators/validators";
+
+const maxLength50 = maxLengthCreator(50);
 
 const DialogsForm = (props) => {
   return (
     <form onSubmit={props.handleSubmit}>
         <div>
-          <Field placeholder={"Enter your message"} name={"newMessageText"} component={"textarea"}/>
+          <Field placeholder={"Enter your message"} name={"newMessageText"} component={Textarea} validate={[required, maxLength50 ]}/>
         </div>
         <div>
           <button>Send message</button>

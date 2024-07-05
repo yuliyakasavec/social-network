@@ -70,9 +70,9 @@ export const headerAPI = {
 }
 
 export const loginAPI = {
-  logIn(body) {
+  logIn(email, password, rememberMe = false) {
     return instance
-        .post(`auth/login`, body)
+        .post(`auth/login`, {email, password, rememberMe})
         .then((response) => {
             return response.data;
           });

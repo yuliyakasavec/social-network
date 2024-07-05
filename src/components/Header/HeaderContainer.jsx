@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "./Header";
 import { connect } from "react-redux";
-import { getAuthUserData } from "../../redux/auth_reducer";
+import { getAuthUserData, logout } from "../../redux/auth_reducer";
 import Preloader from "../common/Preloader/Preloader";
 
 class HeaderContainer extends React.Component {
@@ -35,4 +35,4 @@ const mapStateToProps = (state) => ({
   isFetching: state.auth.isFetching,
 });
 
-export default connect(mapStateToProps, {getAuthUserData})(HeaderContainer);
+export default connect(mapStateToProps, {getAuthUserData, logout})(HeaderContainer);

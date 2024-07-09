@@ -1,45 +1,46 @@
 import React from "react";
 import classes from "./MyPosts.module.css";
 import Post from "./Post/Post";
-import { Field, reduxForm } from "redux-form";
-import { maxLengthCreator, required } from "../../../utils/validators/validators";
-import { Textarea } from "../../common/FormsControls/FormsControls";
+import { useForm } from "react-hook-form";
 
-
-const maxLength10 = maxLengthCreator(10);
-
-const MyPostsForm = (props) => {
-  return (
-    <form onSubmit={props.handleSubmit}>
-        <div>
-          <Field placeholder={"Add your post"} name={"newPostText"} component={Textarea} validate={[required, maxLength10 ]} />
-        </div>
-        <div>
-          <button>Add post</button>
-        </div>
-        </form>
-  )
-}
-
-const MyPostsReduxForm = reduxForm({
-  form: 'ProfileAddNewPostForm',
-})(MyPostsForm)
-
+const MAX_MESSAGE_LENGTH = 10;
 
 const MyPosts = (props) => {
-  
   let postsElements = props.posts.map((p) => (
     <Post message={p.message} key={p.id} id={p.id} likesCount={p.likesCount} />
   ));
 
+  const { register, handleSubmit, reset, formState: {
+    errors
+  }, } = useForm({
+    mode: 'onChange',
+  });
+
   const onSubmit = (formData) => {
-    props.addPost(formData.newPostText)
-}
+    props.addPost(formData.newPostText);
+    reset();
+  };
 
   return (
     <div className={classes.postsBlock}>
       <h3>My posts</h3>
-        <MyPostsReduxForm onSubmit={onSubmit}/>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div>
+          <input
+            {...register("newPostText", {
+              required: "This field is required.",
+              maxLength: {
+                value: MAX_MESSAGE_LENGTH,
+                message: `Max length is ${MAX_MESSAGE_LENGTH} symbols`,
+              },
+            })}
+          />
+          {errors.newPostText && (<div style={{ color: 'red'}}>{errors.newPostText.message}</div>)}
+        </div>
+        <div>
+          <button type="submit">Add post</button>
+        </div>
+      </form>
       <div className={classes.posts}>{postsElements}</div>
     </div>
   );

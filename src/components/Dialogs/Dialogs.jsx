@@ -1,33 +1,13 @@
-import { Field, reduxForm } from "redux-form";
+import { useForm } from "react-hook-form";
 import DialogItem from "./DialogItem/DialogItem";
 import classes from "./Dialogs.module.css";
 import Message from "./Message/Message";
 import React from "react";
-import { Textarea } from "../common/FormsControls/FormsControls";
-import { maxLengthCreator, required } from "../../utils/validators/validators";
 
-const maxLength50 = maxLengthCreator(50);
 
-const DialogsForm = (props) => {
-  return (
-    <form onSubmit={props.handleSubmit}>
-        <div>
-          <Field placeholder={"Enter your message"} name={"newMessageText"} component={Textarea} validate={[required, maxLength50 ]}/>
-        </div>
-        <div>
-          <button>Send message</button>
-        </div>
-        </form>
-  )
-}
-
-const DialogsReduxForm = reduxForm({
-  form: 'newMessageText',
-})(DialogsForm)
-
+const MAX_MESSAGE_LENGTH = 50;
 
 const Dialogs = (props) => {
-
   let state = props.dialogsPage;
 
   let dialogsElements = state.dialogs.map((d) => (
@@ -38,18 +18,39 @@ const Dialogs = (props) => {
     <Message message={m.message} key={m.id} id={m.id} />
   ));
 
+  const { register, handleSubmit, reset, formState: {
+    errors
+  }, } = useForm({
+    mode: 'onChange'
+  });
 
   const onSubmit = (formData) => {
     props.sendMessage(formData.newMessageText);
-}
-
+    reset();
+  };
 
   return (
     <div className={classes.dialogs}>
       <div className={classes.dialogsItems}>{dialogsElements}</div>
       <div className={classes.messages}>
         {messagesElements}
-        <DialogsReduxForm onSubmit={onSubmit}/>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <input
+              {...register("newMessageText", {
+                required: "This field is required.",
+                maxLength: {
+                  value: MAX_MESSAGE_LENGTH,
+                  message: `Max length is ${MAX_MESSAGE_LENGTH} symbols`,
+                },
+              })}
+            />
+            {errors.newMessageText && (<div style={{ color: 'red'}}>{errors.newMessageText.message}</div>)}
+          </div>
+          <div>
+          <input type="submit" value="Send Message" />
+          </div>
+        </form>
       </div>
     </div>
   );

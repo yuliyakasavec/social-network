@@ -54,15 +54,18 @@ export const getAuthUserData = () => {
   };
 };
 
-export const login = (email, password, rememberMe) => {
+export const login = (email, password, rememberMe, onServerError) => {
   return (dispatch) => {
     dispatch(toggleIsFetching(true));
     loginAPI
     .logIn(email, password, rememberMe)
     .then((data) => {
       dispatch(toggleIsFetching(false));
+      console.log(data)
       if (data.resultCode === 0) {
         dispatch(getAuthUserData())
+      } else {
+        onServerError(data.messages.join(' !'));
       }
     });
   };

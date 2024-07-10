@@ -42,7 +42,7 @@ export const toggleIsFetching = (isFetching) => ({
 export const getAuthUserData = () => {
   return (dispatch) => {
     dispatch(toggleIsFetching(true));
-    headerAPI
+    return headerAPI
     .headerGetAuth()
     .then((data) => {
       dispatch(toggleIsFetching(false));

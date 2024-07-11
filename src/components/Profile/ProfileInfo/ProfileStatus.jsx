@@ -1,5 +1,4 @@
 import React from "react";
-import { Test } from "./Test";
 
 class ProfileStatus extends React.Component {
   state = {
@@ -48,11 +47,10 @@ class ProfileStatus extends React.Component {
               onChange={this.onStatusChange}
               autoFocus={true}
               onBlur={this.deactivateEditMode}
-              value={this.state.status}
+              value={this.state.status || ""}
             />
           )}
         </div>
-        {/* <Test /> */}
       </div>
     );
   }

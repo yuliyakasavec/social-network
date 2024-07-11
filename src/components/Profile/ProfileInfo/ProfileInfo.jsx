@@ -1,7 +1,7 @@
 import Preloader from "../../common/Preloader/Preloader";
 import classes from "./ProfileInfo.module.css";
 import React from "react";
-import ProfileStatus from "./ProfileStatus";
+import ProfileStatusWithHooks from "./ProfileStatusWithHooks";
 
 const ProfileInfo = (props) => {
   if (!props.profile) {
@@ -22,7 +22,7 @@ const ProfileInfo = (props) => {
         <span className={classes.color}>Моя страничка на фейсбуке:</span> 
         <span>{props.profile.contacts.facebook}</span>
         </div>
-        <ProfileStatus status={props.status} updateStatus={props.updateStatus}/>
+        <ProfileStatusWithHooks status={props.status} updateStatus={props.updateStatus}/>
       </div>
     </div>
   );

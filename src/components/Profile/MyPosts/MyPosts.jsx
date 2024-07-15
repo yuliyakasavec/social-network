@@ -5,7 +5,8 @@ import { useForm } from "react-hook-form";
 
 const MAX_MESSAGE_LENGTH = 10;
 
-const MyPosts = (props) => {
+const MyPosts = React.memo((props) => {
+
   let postsElements = props.posts.map((p) => (
     <Post message={p.message} key={p.id} id={p.id} likesCount={p.likesCount} />
   ));
@@ -44,6 +45,6 @@ const MyPosts = (props) => {
       <div className={classes.posts}>{postsElements}</div>
     </div>
   );
-};
+});
 
 export default MyPosts;

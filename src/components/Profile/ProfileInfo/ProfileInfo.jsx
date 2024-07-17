@@ -3,8 +3,8 @@ import classes from "./ProfileInfo.module.css";
 import React from "react";
 import ProfileStatusWithHooks from "./ProfileStatusWithHooks";
 
-const ProfileInfo = (props) => {
-  if (!props.profile) {
+const ProfileInfo = ({profile, status, updateStatus}) => {
+  if (!profile) {
     return <Preloader />;
   }
 
@@ -17,12 +17,12 @@ const ProfileInfo = (props) => {
         />
       </div> */}
       <div className={classes.descriptionBlock}>
-        <img src={props.profile.photos.large} />
+        <img src={profile.photos.large} />
         <div>
         <span className={classes.color}>Моя страничка на фейсбуке:</span> 
-        <span>{props.profile.contacts.facebook}</span>
+        <span>{profile.contacts.facebook}</span>
         </div>
-        <ProfileStatusWithHooks status={props.status} updateStatus={props.updateStatus}/>
+        <ProfileStatusWithHooks status={status} updateStatus={updateStatus}/>
       </div>
     </div>
   );

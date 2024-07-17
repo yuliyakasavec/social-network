@@ -66,7 +66,7 @@ export const login = (email, password, rememberMe, onServerError) => {
 export const logout = () => {
   return async (dispatch) => {
     dispatch(toggleIsFetching(true));
-    let data = loginAPI.logOut();
+    let data = await loginAPI.logOut();
       dispatch(toggleIsFetching(false));
       if (data.resultCode === 0) {
         dispatch(setAuthUserData(null, null, null, false));

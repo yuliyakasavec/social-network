@@ -60,34 +60,25 @@ export const setStatus = (status) => ({
 });
 
 export const getUsersProfile = (userId) => {
-  return (dispatch) => {
-    profileAPI
-    .profileGetUsers(userId)
-    .then((data) => {
+  return async (dispatch) => {
+    const data = await profileAPI.profileGetUsers(userId);
       dispatch(setUserProfile(data));
-    });
   };
 };
 
 export const getStatus = (userId) => {
-  return (dispatch) => {
-    profileAPI
-    .getStatus(userId)
-    .then((data) => {
+  return async (dispatch) => {
+    const data = await profileAPI.getStatus(userId);
       dispatch(setStatus(data));
-    });
   };
 };
 
 export const updateStatus = (status) => {
-  return (dispatch) => {
-    profileAPI
-    .updateStatus(status)
-    .then((data) => {
+  return async (dispatch) => {
+    const data = await profileAPI.updateStatus(status);
       if (data.resultCode === 0) {
         dispatch(setStatus(status));
       }
-    });
   };
 };
 

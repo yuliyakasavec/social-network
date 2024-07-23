@@ -4,15 +4,16 @@ import Navbar from "./components/Navbar/Navbar";
 import News from "./components/News/News";
 import Music from "./components/Music/Music";
 import Settings from "./components/Settings/Settings";
-import DialogsContainer from "./components/Dialogs/DialogsContainer";
 import UsersContainer from "./components/Users/UsersContainer";
-import ProfileContainer from "./components/Profile/ProfileContainer";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import Login from "./components/Login/Login";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { connect } from "react-redux";
 import { initializeApp } from "./redux/app_reducer";
 import Preloader from "./components/common/Preloader/Preloader";
+
+const DialogsContainer = lazy(() => import('./components/Dialogs/DialogsContainer'));
+const ProfileContainer = lazy(() => import('./components/Profile/ProfileContainer'));
 
 const App = (props) => {
 
@@ -29,6 +30,7 @@ const App = (props) => {
       <HeaderContainer />
       <Navbar />
       <div className="app-wrapper-content">
+      <Suspense fallback={<Preloader />}>
         <Routes>
           <Route path="/dialogs/*" element={<DialogsContainer />} />
           <Route path="/profile/:userId?" element={<ProfileContainer />} />
@@ -38,6 +40,7 @@ const App = (props) => {
           <Route path="/music" element={<Music />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
+        </Suspense>
       </div>
     </div>
   );

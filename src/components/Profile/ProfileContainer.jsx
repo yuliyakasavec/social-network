@@ -1,7 +1,7 @@
 import Profile from "./Profile";
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getStatus, getUsersProfile, updateStatus } from "../../redux/profile_reducer";
+import { getStatus, getUsersProfile, savePhoto, updateStatus } from "../../redux/profile_reducer";
 import { connect } from "react-redux";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import { compose } from "redux";
@@ -13,8 +13,8 @@ function ProfileContainer(props) {
   // }
 
   useEffect(() => {
-    props.getUsersProfile(userId);
-    props.getStatus(userId);
+    props.getUsersProfile(userId || props.userId);
+    props.getStatus(userId || props.userId);
     // profileAPI
     //   .profileGetUsers(userId)
     //   .then((data) => {
@@ -25,7 +25,7 @@ function ProfileContainer(props) {
 
   return (
     <div>
-      <Profile profile={props.profile} status={props.status} updateStatus={props.updateStatus}/>
+      <Profile isOwner={!userId} profile={props.profile} status={props.status} updateStatus={props.updateStatus} savePhoto={props.savePhoto} />
     </div>
   );
 }
@@ -34,11 +34,12 @@ function ProfileContainer(props) {
 
 let mapStateToProps = (state) => ({
   profile: state.profilePage.profile,
-  status: state.profilePage.status
+  status: state.profilePage.status,
+  userId: state.auth.userId
 });
 
 export default compose(
-  connect(mapStateToProps, { getUsersProfile, getStatus, updateStatus }),
+  connect(mapStateToProps, { getUsersProfile, getStatus, updateStatus, savePhoto }),
   withAuthRedirect
 )
 (ProfileContainer);;

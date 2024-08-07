@@ -1,4 +1,5 @@
 import axios from "axios";
+import { savePhoto } from "../redux/profile_reducer";
 
 const instance = axios.create({
   withCredentials: true,
@@ -38,14 +39,14 @@ export const usersAPI = {
 export const profileAPI = {
     profileGetUsers(userId) {
         return instance
-          .get(`profile/` + (userId || 2))
+          .get(`profile/` + userId)
           .then((response) => {
             return response.data;
           });
       },
     getStatus(userId) {
       return instance
-          .get(`profile/status/` + (userId || 31301))
+          .get(`profile/status/` + userId)
           .then((response) => {
             return response.data;
           });
@@ -56,6 +57,19 @@ export const profileAPI = {
           .then((response) => {
             return response.data;
           });
+    },
+    savePhoto(photoFile) {
+      const formData = new FormData();
+      formData.append("image", photoFile);
+      return instance
+      .put(`profile/photo`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      .then((response) => {
+        return response.data;
+      })
     }
 }
 

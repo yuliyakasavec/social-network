@@ -15,7 +15,7 @@ let initialState = {
     { id: 6, message: "Ok", likesCount: "50" },
   ],
   profile: null,
-  status: ""
+  status: "",
 };
 
 const profileReducer = (state = initialState, action) => {
@@ -36,17 +36,17 @@ const profileReducer = (state = initialState, action) => {
         ...state,
         profile: action.profile,
       };
-    };
+    }
     case SET_STATUS: {
       return {
         ...state,
         status: action.status,
       };
-    };
+    }
     case SAVE_PHOTO_SUCCESS: {
       return {
         ...state,
-        profile: {...state.profile, photos: action.photos}
+        profile: { ...state.profile, photos: action.photos },
       };
     }
     default:
@@ -54,7 +54,10 @@ const profileReducer = (state = initialState, action) => {
   }
 };
 
-export const addPostActionCreator = (newPostText) => ({ type: ADD_POST, newPostText });
+export const addPostActionCreator = (newPostText) => ({
+  type: ADD_POST,
+  newPostText,
+});
 
 export const setUserProfile = (profile) => ({
   type: SET_USER_PROFILE,
@@ -74,32 +77,51 @@ export const savePhotoSuccess = (photos) => ({
 export const getUsersProfile = (userId) => {
   return async (dispatch) => {
     const data = await profileAPI.profileGetUsers(userId);
-      dispatch(setUserProfile(data));
+    dispatch(setUserProfile(data));
   };
 };
 
 export const getStatus = (userId) => {
   return async (dispatch) => {
     const data = await profileAPI.getStatus(userId);
-      dispatch(setStatus(data));
+    dispatch(setStatus(data));
   };
 };
 
 export const updateStatus = (status) => {
   return async (dispatch) => {
     const data = await profileAPI.updateStatus(status);
-      if (data.resultCode === 0) {
-        dispatch(setStatus(status));
-      }
+    if (data.resultCode === 0) {
+      dispatch(setStatus(status));
+    }
   };
 };
 
 export const savePhoto = (file) => {
   return async (dispatch) => {
     const data = await profileAPI.savePhoto(file);
-      if (data.resultCode === 0) {
-        dispatch(savePhotoSuccess(data.data.photos));
+    if (data.resultCode === 0) {
+      dispatch(savePhotoSuccess(data.data.photos));
+    }
+  };
+};
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export const saveProfile = (profile) => {
+  return async (dispatch, getState) => {
+    const userId = getState().auth.userId;
+    const data = await profileAPI.saveProfile(profile);
+    if (data.data.resultCode !== 0) {
+      return data.data.messages;
+    }
+    delay(4000).then(() => {
+      if (data.data.resultCode === 0) {
+        dispatch(getUsersProfile(userId));
       }
+    });
   };
 };
 

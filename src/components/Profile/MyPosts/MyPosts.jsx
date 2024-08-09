@@ -27,7 +27,7 @@ const MyPosts = React.memo((props) => {
       <h3>My posts</h3>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <input
+          <input placeholder="Post message"
             {...register("newPostText", {
               required: "This field is required.",
               maxLength: {

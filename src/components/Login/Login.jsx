@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { login } from "../../redux/auth_reducer";
 import { Navigate } from "react-router-dom";
@@ -9,7 +9,7 @@ const Login = (props) => {
   const { register, handleSubmit, formState: {
     errors
   }, 
-  setError, clearErrors } = useForm({
+  setError, clearErrors, watch } = useForm({
     mode: 'onChange',
   });
 
@@ -26,13 +26,21 @@ const Login = (props) => {
       formData.email,
       formData.password,
       formData.rememberMe,
+      formData.captcha,
       onServerError
     );
   };
 
+  useEffect(() => {
+    if (errors.server) {
+      clearErrors();
+    }
+  }, [watch()])
+
   if (props.isAuth) {
     return <Navigate to={"/profile"} />;
   }
+
 
   return (
     <div>
@@ -68,6 +76,12 @@ const Login = (props) => {
         Remember me
       </div>
       {errors.rememberMe && (<div style={{ color: 'red'}}>{errors.rememberMe.message}</div>)}
+      {props.captchaUrl && <img src={props.captchaUrl} />}
+      {props.captchaUrl && <div><input 
+         {...register('captcha', {
+          required: "Required!",
+        })}
+          /></div>}
       <div>
         <input type="submit" value="Log in" />
       </div>
@@ -81,6 +95,7 @@ const Login = (props) => {
 
 const mapStateToProps = (state) => ({
   isAuth: state.auth.isAuth,
+  captchaUrl: state.auth.captchaUrl
 });
 
 export default connect(mapStateToProps, { login })(Login);

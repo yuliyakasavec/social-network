@@ -35,7 +35,7 @@ const Login = (props) => {
     if (errors.server) {
       clearErrors();
     }
-  }, [watch()])
+  }, [watch('email'), watch('password')])
 
   if (props.isAuth) {
     return <Navigate to={"/profile"} />;
@@ -83,7 +83,7 @@ const Login = (props) => {
         })}
           /></div>}
       <div>
-        <input type="submit" value="Log in" />
+        <button type="submit">Log in</button>
       </div>
       <div>
       {errors.server && (<div style={{ color: 'red'}}>{errors.server.message}</div>)}

@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
 import News from "./components/News/News";
@@ -12,26 +12,30 @@ import { connect } from "react-redux";
 import { initializeApp } from "./redux/app_reducer";
 import Preloader from "./components/common/Preloader/Preloader";
 
-const DialogsContainer = lazy(() => import('./components/Dialogs/DialogsContainer'));
-const ProfileContainer = lazy(() => import('./components/Profile/ProfileContainer'));
+const DialogsContainer = lazy(() =>
+  import("./components/Dialogs/DialogsContainer")
+);
+const ProfileContainer = lazy(() =>
+  import("./components/Profile/ProfileContainer")
+);
 
 const App = (props) => {
-
+  
   useEffect(() => {
     props.initializeApp();
   }, []);
-
+  
   if (!props.initialized) {
-    return <Preloader />
+    return <Preloader />;
   }
 
   return (
     <div className="app-wrapper">
-       <script
-          async
-          type="text/javascript"
-          dangerouslySetInnerHTML={{
-            __html: `(function(l) {
+      <script
+        async
+        type="text/javascript"
+        dangerouslySetInnerHTML={{
+          __html: `(function(l) {
               if (l.search[1] === '/' ) {
                 var decoded = l.search.slice(1).split('&').map(function(s) { 
                   return s.replace(/~and~/g, '&')
@@ -41,21 +45,23 @@ const App = (props) => {
                 );
               }
             }(window.location))`,
-          }}
-        />
+        }}
+      />
       <HeaderContainer />
       <Navbar />
       <div className="app-wrapper-content">
-      <Suspense fallback={<Preloader />}>
-        <Routes>
-          <Route path="/dialogs/*" element={<DialogsContainer />} />
-          <Route path="/profile/:userId?" element={<ProfileContainer />} />
-          <Route path="/users/*" element={<UsersContainer />} />
-          <Route path="/login/*" element={<Login />} />
-          <Route path="/news" element={<News />} />
-          <Route path="/music" element={<Music />} />
-          <Route path="/settings" element={<Settings />} />
-        </Routes>
+        <Suspense fallback={<Preloader />}>
+          <Routes>
+            <Route path="/" element={<Navigate to={"/profile"} />} />
+            <Route path="/dialogs/*" element={<DialogsContainer />} />
+            <Route path="/profile/:userId?" element={<ProfileContainer />} />
+            <Route path="/users/*" element={<UsersContainer />} />
+            <Route path="/login/*" element={<Login />} />
+            <Route path="/news" element={<News />} />
+            <Route path="/music" element={<Music />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="*" element={<div>404 NOT FOUND</div>} />
+          </Routes>
         </Suspense>
       </div>
     </div>
@@ -64,7 +70,7 @@ const App = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    initialized: state.app.initialized
-  }
-}
-export default connect(mapStateToProps, {initializeApp})(App);
+    initialized: state.app.initialized,
+  };
+};
+export default connect(mapStateToProps, { initializeApp })(App);

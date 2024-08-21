@@ -7,7 +7,7 @@ import authReducer from "./auth_reducer";
 import {thunk} from "redux-thunk";
 import appReducer from "./app_reducer";
 
-let reducers = combineReducers({
+let rootReducer = combineReducers({
     profilePage: profileReducer,
     dialogsPage: dialogsReducer,
     friendsPage: sidebarReducer,
@@ -16,7 +16,15 @@ let reducers = combineReducers({
     app: appReducer
 });
 
+type RootReducerType = typeof rootReducer;
+export type AppStateType = ReturnType<RootReducerType>;
+
+//let state: AppStateType;
+//state.dialogsPage;
+
+
+//@ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
 
 export default store;

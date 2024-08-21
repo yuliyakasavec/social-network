@@ -1,19 +1,28 @@
 import {
+  InitialDialogsStateType,
   sendMessageActionCreator
 } from "../../redux/dialogs_reducer";
 import Dialogs from "./Dialogs";
 import { connect } from "react-redux";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import { compose } from "redux";
+import { AppStateType } from "../../redux/redux_store";
 
+type MapStatePropsType = {
+  dialogsPage: InitialDialogsStateType
+}
 
-let mapStateToProps = (state) => {
+type MapDispatchPropsType = {
+  sendMessage: (newMessageText: string) => void
+}
+
+let mapStateToProps = (state: AppStateType): MapStatePropsType => {
   return {
     dialogsPage: state.dialogsPage,
   }
 }
 
-let mapDispatchToProps = (dispatch) => {
+let mapDispatchToProps = (dispatch: any): MapDispatchPropsType => {
   return {
     sendMessage: (newMessageText) => {
       dispatch(sendMessageActionCreator(newMessageText));

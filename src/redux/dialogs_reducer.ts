@@ -11,12 +11,12 @@ type DialogsType = {
   avatar: string
 }
 
-export type InitialStateType = {
+export type InitialDialogsStateType = {
   messages: Array<MessagesType>,
   dialogs:  Array<DialogsType>
 }
 
-let initialState: InitialStateType = {
+let initialState: InitialDialogsStateType = {
   messages: [
     { id: 1, message: "Hi" },
     { id: 2, message: "How are you?" },
@@ -64,7 +64,7 @@ let initialState: InitialStateType = {
   ],
 };
 
-const dialogsReducer = (state = initialState, action: any): InitialStateType => {
+const dialogsReducer = (state = initialState, action: any): InitialDialogsStateType => {
 
   switch (action.type) {
     case SEND_MESSAGE:

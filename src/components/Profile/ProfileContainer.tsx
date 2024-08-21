@@ -5,16 +5,34 @@ import { getStatus, getUsersProfile, savePhoto, saveProfile, updateStatus } from
 import { connect } from "react-redux";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import { compose } from "redux";
+import { AppStateType } from "../../redux/redux_store";
+import { ProfileType } from "../../types/types";
 
-function ProfileContainer(props) {
+type MapStatePropsType = {
+  profile: ProfileType | null,
+  status: string,
+  userId: number
+}
+
+type MapDispatchPropsType = {
+  getUsersProfile: (userId: number) => void, 
+  getStatus: (userId: number) => void, 
+  updateStatus: (status: string) => void, 
+  savePhoto: (v: any) => void, 
+  saveProfile: (profile: ProfileType) => void
+}
+
+type PropsType = MapStatePropsType & MapDispatchPropsType;
+
+function ProfileContainer(props: PropsType) {
   let { userId } = useParams();
   // if (!userId) {
   //   userId = 2;
   // }
 
   useEffect(() => {
-    props.getUsersProfile(userId || props.userId);
-    props.getStatus(userId || props.userId);
+    props.getUsersProfile(Number(userId) || props.userId);
+    props.getStatus(Number(userId) || props.userId);
     // profileAPI
     //   .profileGetUsers(userId)
     //   .then((data) => {
@@ -32,7 +50,7 @@ function ProfileContainer(props) {
 
 
 
-let mapStateToProps = (state) => ({
+let mapStateToProps = (state: AppStateType) => ({
   profile: state.profilePage.profile,
   status: state.profilePage.status,
   userId: state.auth.userId

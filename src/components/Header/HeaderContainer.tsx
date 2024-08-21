@@ -3,8 +3,21 @@ import Header from "./Header";
 import { connect } from "react-redux";
 import { logout } from "../../redux/auth_reducer";
 import Preloader from "../common/Preloader/Preloader";
+import { AppStateType } from "../../redux/redux_store";
 
-class HeaderContainer extends React.Component {
+type MapStatePropsType = {
+  isFetching: boolean
+  isAuth: boolean
+  login: string | null;
+}
+
+type MapDispatchPropsType = {
+  logout: () => void
+}
+
+type PropsType = MapStatePropsType & MapDispatchPropsType;
+
+class HeaderContainer extends React.Component <PropsType> {
 
   render() {
     return (
@@ -16,7 +29,7 @@ class HeaderContainer extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: AppStateType) => ({
   isAuth: state.auth.isAuth,
   login: state.auth.login,
   isFetching: state.auth.isFetching,

@@ -3,24 +3,44 @@ import { connect } from "react-redux";
 import { login } from "../../redux/auth_reducer";
 import { Navigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { AppStateType } from "../../redux/redux_store";
 
-const Login = (props) => {
+type LoginsType = {
+  email: string
+  password: string
+  rememberMe: boolean
+  captcha: null,
+  server:string;
+}
+
+type PropsType = {
+  login: (email: string, 
+    password: string,
+    rememberMe: boolean,
+    captcha: null,
+    onServerError: (v: string) => void
+  ) => void
+  isAuth: boolean
+  captchaUrl: string | null
+}
+
+const Login = (props: PropsType) => {
 
   const { register, handleSubmit, formState: {
     errors
   }, 
-  setError, clearErrors, watch } = useForm({
+  setError, clearErrors, watch } = useForm<LoginsType>({
     mode: 'onChange',
   });
 
-  const onServerError = (errorMessage) => {
+  const onServerError = (errorMessage: string) => {
     setError("server", {
       type: "custom",
       message: errorMessage || "Error!",
     })
   }
   
-  const onSubmit = (formData) => {
+  const onSubmit = handleSubmit((formData) => {
     clearErrors()
     props.login(
       formData.email,
@@ -29,7 +49,7 @@ const Login = (props) => {
       formData.captcha,
       onServerError
     );
-  };
+  });
 
   useEffect(() => {
     if (errors.server) {
@@ -45,7 +65,7 @@ const Login = (props) => {
   return (
     <div>
       <h1>LOGIN</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={onSubmit}>
       <div>
         <input
           type="text" placeholder="Email"
@@ -93,7 +113,7 @@ const Login = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: AppStateType) => ({
   isAuth: state.auth.isAuth,
   captchaUrl: state.auth.captchaUrl
 });

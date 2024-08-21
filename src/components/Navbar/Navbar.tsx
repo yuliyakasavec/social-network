@@ -1,12 +1,12 @@
 import { NavLink } from 'react-router-dom';
 import classes from './Navbar.module.css';
 import Friends from '../Friends/Friends';
+import { AppStateType } from '../../redux/redux_store';
 
-const Navbar = (props) => {
 
-console.log(props)
+const Navbar = (props: AppStateType) => {
 
-  let sidebarElements = props.state?.sidebar.map( s => <Friends name={s.name} id={s.id} avatar={s.avatar} />);
+  // let sidebarElements = props.state?.sidebar.map( s => <Friends name={s.name} id={s.id} avatar={s.avatar} />);
 
     return (
       <nav className={classes.nav}>
@@ -31,7 +31,7 @@ console.log(props)
       <div className={classes.item}>
         <div className={classes.side}>Friends</div>
         <div className={classes.photos}>
-        {sidebarElements}
+        {/* {sidebarElements} */}
         </div>
       </div>
     </nav>

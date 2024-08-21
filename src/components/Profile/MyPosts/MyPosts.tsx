@@ -2,10 +2,21 @@ import React from "react";
 import classes from "./MyPosts.module.css";
 import Post from "./Post/Post";
 import { useForm } from "react-hook-form";
+import { PostsType } from "../../../types/types";
 
 const MAX_MESSAGE_LENGTH = 10;
 
-const MyPosts = React.memo((props) => {
+
+type MyPostsType = {
+  newPostText: string
+}
+
+type PropsType = {
+  addPost: (newPostText: string) => void
+  posts: Array<PostsType>
+}
+
+const MyPosts = React.memo((props: PropsType) => {
 
   let postsElements = props.posts.map((p) => (
     <Post message={p.message} key={p.id} id={p.id} likesCount={p.likesCount} />
@@ -13,19 +24,19 @@ const MyPosts = React.memo((props) => {
 
   const { register, handleSubmit, reset, formState: {
     errors
-  }, } = useForm({
+  }, } = useForm<MyPostsType>({
     mode: 'onChange',
   });
 
-  const onSubmit = (formData) => {
+  const onSubmit = handleSubmit((formData) => {
     props.addPost(formData.newPostText);
     reset();
-  };
+  });
 
   return (
     <div className={classes.postsBlock}>
       <h3>My posts</h3>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={onSubmit}>
         <div>
           <input placeholder="Post message"
             {...register("newPostText", {

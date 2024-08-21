@@ -1,6 +1,11 @@
 import classes from "./Friends.module.css";
 
-const Friends = (props) => {
+type PropsType = {
+  avatar: string
+  name: string
+}
+
+const Friends = (props: PropsType) => {
   return (
     <div className={classes.element}>
       <img src={props.avatar} />

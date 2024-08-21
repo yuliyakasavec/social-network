@@ -9,14 +9,14 @@ const SAVE_PHOTO_SUCCESS = "SAVE_PHOTO_SUCCESS";
 
 
 
-export type InitialStateType = {
+export type InitialProfileStateType = {
   posts: Array<PostsType>,
   profile: ProfileType | null,
   status: string
   newPostText: string
 }
 
-let initialState: InitialStateType = {
+let initialState: InitialProfileStateType = {
   posts: [
     { id: 1, message: "Hi, how are you?", likesCount: 30 },
     { id: 2, message: "It is my first post", likesCount: 35 },
@@ -30,7 +30,7 @@ let initialState: InitialStateType = {
   newPostText: ''
 };
 
-const profileReducer = (state = initialState, action: any): InitialStateType => {
+const profileReducer = (state = initialState, action: any): InitialProfileStateType => {
   switch (action.type) {
     case ADD_POST:
       let newPost = {

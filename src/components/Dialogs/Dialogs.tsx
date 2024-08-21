@@ -3,11 +3,22 @@ import DialogItem from "./DialogItem/DialogItem";
 import classes from "./Dialogs.module.css";
 import Message from "./Message/Message";
 import React from "react";
+import { InitialDialogsStateType } from "../../redux/dialogs_reducer";
 
 
 const MAX_MESSAGE_LENGTH = 50;
 
-const Dialogs = (props) => {
+type DialogsType = {
+  newMessageText: string
+}
+
+type PropsType = {
+  dialogsPage: InitialDialogsStateType
+  sendMessage: (newMessageText: string) => void
+}
+
+
+const Dialogs = (props:PropsType) => {
   let state = props.dialogsPage;
 
   let dialogsElements = state.dialogs.map((d) => (
@@ -20,25 +31,24 @@ const Dialogs = (props) => {
 
   const { register, handleSubmit, reset, formState: {
     errors
-  }, } = useForm({
+  }, } = useForm<DialogsType>({
     mode: 'onChange'
   });
 
-  const onSubmit = (formData) => {
+  const onSubmit = handleSubmit((formData) => {
     props.sendMessage(formData.newMessageText);
     reset();
-  };
+  });
 
   return (
     <div className={classes.dialogs}>
       <div className={classes.dialogsItems}>{dialogsElements}</div>
       <div className={classes.messages}>
         {messagesElements}
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={onSubmit}>
           <div>
             <input
               {...register("newMessageText", {
-                required: "This field is required.",
                 maxLength: {
                   value: MAX_MESSAGE_LENGTH,
                   message: `Max length is ${MAX_MESSAGE_LENGTH} symbols`,

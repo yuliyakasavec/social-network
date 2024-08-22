@@ -1,5 +1,5 @@
 import { ThunkAction } from "redux-thunk";
-import { profileAPI } from "../api/api";
+import { profileAPI, ResultCodesEnum } from "../api/api";
 import { PhotosType, PostsType, ProfileType } from "../types/types";
 import { AppStateType } from "./redux_store";
 
@@ -69,6 +69,7 @@ const profileReducer = (state = initialState, action: ActionsTypes): InitialProf
 type ActionsTypes = AddPostActionCreatorType | SetUserProfileType | SetStatusType | SavePhotoSuccessType;
 
 type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, ActionsTypes>;
+type ThunkTypeForSaveProfile = ThunkAction<Promise<string[] | undefined>, AppStateType, unknown, ActionsTypes>
 
 type AddPostActionCreatorType = {
   type: typeof ADD_POST;
@@ -112,7 +113,7 @@ export const savePhotoSuccess = (photos: PhotosType): SavePhotoSuccessType => ({
 
 
 
-export const getUsersProfile = (userId: number | null): ThunkType => {
+export const getUsersProfile = (userId: number): ThunkType => {
   return async (dispatch) => {
     const data = await profileAPI.profileGetUsers(userId);
     dispatch(setUserProfile(data));
@@ -130,7 +131,7 @@ export const updateStatus = (status: string): ThunkType => {
   return async (dispatch) => {
     try {
     const data = await profileAPI.updateStatus(status);
-    if (data.resultCode === 0) {
+    if (data.resultCode === ResultCodesEnum.Success) {
       dispatch(setStatus(status));
     }
   } catch(error) {
@@ -141,7 +142,8 @@ export const updateStatus = (status: string): ThunkType => {
 export const savePhoto = (file: any): ThunkType => {
   return async (dispatch) => {
     const data = await profileAPI.savePhoto(file);
-    if (data.resultCode === 0) {
+    console.log(data)
+    if (data.resultCode === ResultCodesEnum.Success) {
       dispatch(savePhotoSuccess(data.data.photos));
     }
   };
@@ -151,15 +153,15 @@ function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export const saveProfile = (profile: ProfileType): ThunkType => {
+export const saveProfile = (profile: ProfileType): ThunkTypeForSaveProfile => {
   return async (dispatch, getState) => {
     const userId = getState().auth.userId;
     const data = await profileAPI.saveProfile(profile);
-    if (data.data.resultCode !== 0) {
+    if (data.data.resultCode !== ResultCodesEnum.Success) {
       return data.data.messages;
     }
     delay(4000).then(() => {
-      if (data.data.resultCode === 0) {
+      if (data.data.resultCode === ResultCodesEnum.Success && userId) {
         dispatch(getUsersProfile(userId));
       }
     });

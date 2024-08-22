@@ -1,5 +1,5 @@
 import { ThunkAction } from "redux-thunk";
-import { headerAPI, loginAPI, securityAPI } from "../api/api";
+import { headerAPI, loginAPI, ResultCodeForCaptchaEnum, ResultCodesEnum, securityAPI } from "../api/api";
 import { AppStateType } from "./redux_store";
 
 const SET_USER_DATA = "samurai-network/auth/SET_USER_DATA";
@@ -99,7 +99,7 @@ export const getAuthUserData = (): ThunkType => async (dispatch) => {
   dispatch(toggleIsFetching(true));
   let data = await headerAPI.headerGetAuth();
   dispatch(toggleIsFetching(false));
-  if (data.resultCode === 0) {
+  if (data.resultCode === ResultCodesEnum.Success) {
     let { id, email, login } = data.data;
     dispatch(
       setAuthUserData({
@@ -124,10 +124,10 @@ export const login = (
     dispatch(toggleIsFetching(true));
     let data = await loginAPI.logIn(email, password, rememberMe, captcha);
     dispatch(toggleIsFetching(false));
-    if (data.resultCode === 0) {
+    if (data.resultCode === ResultCodesEnum.Success) {
       dispatch(getAuthUserData());
     } else {
-      if (data.resultCode === 10) {
+      if (data.resultCode === ResultCodeForCaptchaEnum.CaptchaIsRequired) {
         dispatch(getCaptchaUrl());
       }
       onServerError(data.messages.join(" !"));
@@ -148,7 +148,7 @@ export const logout = (): ThunkType => {
     dispatch(toggleIsFetching(true));
     let data = await loginAPI.logOut();
     dispatch(toggleIsFetching(false));
-    if (data.resultCode === 0) {
+    if (data.resultCode === ResultCodesEnum.Success) {
       dispatch(
         setAuthUserData({
           userId: null,

@@ -47,7 +47,7 @@ const Dialogs = (props:PropsType) => {
         {messagesElements}
         <form onSubmit={onSubmit}>
           <div>
-            <input
+            <input placeholder="Message"
               {...register("newMessageText", {
                 maxLength: {
                   value: MAX_MESSAGE_LENGTH,

@@ -1,4 +1,6 @@
+import { ThunkAction } from "redux-thunk";
 import { headerAPI, loginAPI, securityAPI } from "../api/api";
+import { AppStateType } from "./redux_store";
 
 const SET_USER_DATA = "samurai-network/auth/SET_USER_DATA";
 const GET_CAPTCHA_URL_SUCCESS = "samurai-network/auth/GET_CAPTCHA_URL_SUCCESS";
@@ -22,7 +24,7 @@ let initialState: InitialStateType = {
   captchaUrl: null,
 };
 
-const authReducer = (state = initialState, action: any): InitialStateType => {
+const authReducer = (state = initialState, action: ActionsTypes): InitialStateType => {
   switch (action.type) {
     case SET_USER_DATA:
     case GET_CAPTCHA_URL_SUCCESS:
@@ -48,6 +50,10 @@ type SetAuthUserDataActionPayloadType = {
   isAuth: boolean;
   captchaUrl: string;
 };
+
+type ActionsTypes = SetAuthUserDataActionType | GetCaptchaUrlSuccessActionType | ToggleIsFetchingActionType;
+
+type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, ActionsTypes>;
 
 type SetAuthUserDataActionType = {
   type: typeof SET_USER_DATA;
@@ -89,7 +95,7 @@ export const toggleIsFetching = (
   isFetching,
 });
 
-export const getAuthUserData = () => async (dispatch: any) => {
+export const getAuthUserData = (): ThunkType => async (dispatch) => {
   dispatch(toggleIsFetching(true));
   let data = await headerAPI.headerGetAuth();
   dispatch(toggleIsFetching(false));
@@ -113,7 +119,7 @@ export const login = (
   rememberMe: boolean,
   captcha: null,
   onServerError: (v: string) => void
-) => {
+): ThunkType => {
   return async (dispatch: any) => {
     dispatch(toggleIsFetching(true));
     let data = await loginAPI.logIn(email, password, rememberMe, captcha);
@@ -129,16 +135,16 @@ export const login = (
   };
 };
 
-export const getCaptchaUrl = () => {
-  return async (dispatch: any) => {
+export const getCaptchaUrl = (): ThunkType => {
+  return async (dispatch) => {
     const data = await securityAPI.getCaptchaUrl();
     const captchaUrl = data.url;
     dispatch(getCaptchaUrlSuccess(captchaUrl));
   };
 };
 
-export const logout = () => {
-  return async (dispatch: any) => {
+export const logout = (): ThunkType => {
+  return async (dispatch) => {
     dispatch(toggleIsFetching(true));
     let data = await loginAPI.logOut();
     dispatch(toggleIsFetching(false));

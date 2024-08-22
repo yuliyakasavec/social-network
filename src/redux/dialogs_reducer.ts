@@ -1,3 +1,6 @@
+import { ThunkAction } from "redux-thunk";
+import { AppStateType } from "./redux_store";
+
 const SEND_MESSAGE = "SEND-MESSAGE";
 
 type MessagesType = {
@@ -64,7 +67,7 @@ let initialState: InitialDialogsStateType = {
   ],
 };
 
-const dialogsReducer = (state = initialState, action: any): InitialDialogsStateType => {
+const dialogsReducer = (state = initialState, action: SendMessageActionCreatorType): InitialDialogsStateType => {
 
   switch (action.type) {
     case SEND_MESSAGE:
@@ -81,6 +84,7 @@ const dialogsReducer = (state = initialState, action: any): InitialDialogsStateT
       return state;
   }
 };
+
 
 
 type SendMessageActionCreatorType = {

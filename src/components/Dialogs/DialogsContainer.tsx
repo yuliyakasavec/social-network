@@ -1,6 +1,6 @@
 import {
   InitialDialogsStateType,
-  sendMessageActionCreator
+  dialogsAction
 } from "../../redux/dialogs_reducer";
 import Dialogs from "./Dialogs";
 import { connect } from "react-redux";
@@ -25,7 +25,7 @@ let mapStateToProps = (state: AppStateType): MapStatePropsType => {
 let mapDispatchToProps = (dispatch: any): MapDispatchPropsType => {
   return {
     sendMessage: (newMessageText) => {
-      dispatch(sendMessageActionCreator(newMessageText));
+      dispatch(dialogsAction.sendMessageActionCreator(newMessageText));
     },
   }
 }

@@ -5,26 +5,29 @@ import { Navigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { AppStateType } from "../../redux/redux_store";
 
-type LoginsType = {
-  email: string
-  password: string
-  rememberMe: boolean
-  captcha: null,
-  server:string;
+type MapStatePropsType = {
+  captchaUrl: string | null
+  isAuth: boolean
 }
 
-type PropsType = {
+type MapDispatchPropsType = {
   login: (email: string, 
     password: string,
     rememberMe: boolean,
     captcha: null,
     onServerError: (v: string) => void
-  ) => void
-  isAuth: boolean
-  captchaUrl: string | null
+  ) => Promise<void>
 }
 
-const Login = (props: PropsType) => {
+type LoginsType = {
+  email: string
+  password: string
+  rememberMe: boolean
+  captcha: null,
+  server: string;
+}
+
+const Login: React.FC<MapStatePropsType & MapDispatchPropsType> = (props) => {
 
   const { register, handleSubmit, formState: {
     errors
@@ -98,9 +101,7 @@ const Login = (props: PropsType) => {
       {errors.rememberMe && (<div style={{ color: 'red'}}>{errors.rememberMe.message}</div>)}
       {props.captchaUrl && <img src={props.captchaUrl} />}
       {props.captchaUrl && <div><input 
-         {...register('captcha', {
-          required: "Required!",
-        })}
+         {...register('captcha')}
           /></div>}
       <div>
         <button type="submit">Log in</button>
@@ -113,7 +114,7 @@ const Login = (props: PropsType) => {
   );
 };
 
-const mapStateToProps = (state: AppStateType) => ({
+const mapStateToProps = (state: AppStateType): MapStatePropsType => ({
   isAuth: state.auth.isAuth,
   captchaUrl: state.auth.captchaUrl
 });

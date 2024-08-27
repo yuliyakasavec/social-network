@@ -11,12 +11,7 @@ type DialogsType = {
   avatar: string
 }
 
-export type InitialDialogsStateType = {
-  messages: Array<MessagesType>,
-  dialogs:  Array<DialogsType>
-}
-
-let initialState: InitialDialogsStateType = {
+let initialState = {
   messages: [
     { id: 1, message: "Hi" },
     { id: 2, message: "How are you?" },
@@ -64,10 +59,12 @@ let initialState: InitialDialogsStateType = {
   ],
 };
 
+export type InitialDialogsStateType = typeof initialState;
+
 const dialogsReducer = (state = initialState, action: ActionType): InitialDialogsStateType => {
 
   switch (action.type) {
-    case 'SEND_MESSAGE':
+    case 'SN/DIALOGS/SEND_MESSAGE':
       let newMessage = {
         id: 7,
         message: action.newMessageText,
@@ -85,7 +82,7 @@ const dialogsReducer = (state = initialState, action: ActionType): InitialDialog
 type ActionType = InferActionsTypes<typeof dialogsAction>;
 
 export const dialogsAction = {
-  sendMessageActionCreator: (newMessageText: string) => ({ type: 'SEND_MESSAGE', newMessageText } as const)
+  sendMessageActionCreator: (newMessageText: string) => ({ type: 'SN/DIALOGS/SEND_MESSAGE', newMessageText } as const)
 };
 
 export default dialogsReducer;

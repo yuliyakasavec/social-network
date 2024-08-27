@@ -1,9 +1,10 @@
 import { Dispatch } from "redux";
-import { ResultCodesEnum, usersAPI } from "../api/api";
-import { PhotosType, UsersType } from "../types/types";
+import { ResultCodesEnum } from "../api/api";
+import { UsersType } from "../types/types";
 import { updateObjectInArray } from "../utils/object_helpers";
-import { AppStateType, InferActionsTypes } from "./redux_store";
+import { AppStateType, BaseThunkType, InferActionsTypes } from "./redux_store";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
+import { usersAPI } from "../api/users-api";
 
 
 export type InitialStateType = {
@@ -26,7 +27,7 @@ let initialState: InitialStateType = {
 
 const usersReducer = (state = initialState, action: ActionsTypes): InitialStateType => {
   switch (action.type) {
-    case 'FOLLOW':
+    case 'SN/USERS/FOLLOW':
       return {
         ...state,
         users: updateObjectInArray(state.users, action.userId, "id", {
@@ -40,38 +41,38 @@ const usersReducer = (state = initialState, action: ActionsTypes): InitialStateT
         //   return u;
         // }),
       };
-    case 'UNFOLLOW':
+    case 'SN/USERS/UNFOLLOW':
       return {
         ...state,
         users: updateObjectInArray(state.users, action.userId, "id", {
           followed: false,
         }),
       };
-    case 'SET_USERS': {
+    case 'SN/USERS/SET_USERS': {
       return {
         ...state,
         users: action.users,
       };
     }
-    case 'SET_CURRENT_PAGE': {
+    case 'SN/USERS/SET_CURRENT_PAGE': {
       return {
         ...state,
         currentPage: action.currentPage,
       };
     }
-    case 'SET_TOTAL_USERS_COUNT': {
+    case 'SN/USERS/SET_TOTAL_USERS_COUNT': {
       return {
         ...state,
         totalUsersCount: action.count,
       };
     }
-    case 'TOGGLE_IS_FETCHING': {
+    case 'SN/USERS/TOGGLE_IS_FETCHING': {
       return {
         ...state,
         isFetching: action.isFetching,
       };
     }
-    case 'TOGGLE_IS_FOLLOWING_PROGRESS': {
+    case 'SN/USERS/TOGGLE_IS_FOLLOWING_PROGRESS': {
       return {
         ...state,
         followingInProgress: action.isFetching
@@ -86,21 +87,21 @@ const usersReducer = (state = initialState, action: ActionsTypes): InitialStateT
 
 type ActionsTypes = InferActionsTypes<typeof actions>;
 
-export const actions = {
-  followSuccess: (userId: number) => ({ type: 'FOLLOW', userId } as const),
-  unfollowSuccess: (userId: number) => ({ type: 'UNFOLLOW', userId } as const),
-  setUsers: (users: UsersType[]) => ({ type: 'SET_USERS', users } as const),
-  setCurrentPage: (currentPage: number) => ({ type: 'SET_CURRENT_PAGE', currentPage } as const),
-  setTotalUsersCount: (totalUsersCount: number) => ({ type: 'SET_TOTAL_USERS_COUNT', count: totalUsersCount } as const),
-  toggleIsFetching: (isFetching: boolean) => ({ type: 'TOGGLE_IS_FETCHING', isFetching } as const),
-  toggleFollowingProgress: (isFetching: boolean, userId: number) => ({ type: 'TOGGLE_IS_FOLLOWING_PROGRESS', isFetching, userId } as const)
-}
-
-type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, ActionsTypes>;
+type ThunkType = BaseThunkType<ActionsTypes>;
 
 // type GetStateType = () => AppStateType;
 type DispatchType = Dispatch<ActionsTypes>
 // dispatch: DispatchType, getState: GetStateType
+
+export const actions = {
+  followSuccess: (userId: number) => ({ type: 'SN/USERS/FOLLOW', userId } as const),
+  unfollowSuccess: (userId: number) => ({ type: 'SN/USERS/UNFOLLOW', userId } as const),
+  setUsers: (users: UsersType[]) => ({ type: 'SN/USERS/SET_USERS', users } as const),
+  setCurrentPage: (currentPage: number) => ({ type: 'SN/USERS/SET_CURRENT_PAGE', currentPage } as const),
+  setTotalUsersCount: (totalUsersCount: number) => ({ type: 'SN/USERS/SET_TOTAL_USERS_COUNT', count: totalUsersCount } as const),
+  toggleIsFetching: (isFetching: boolean) => ({ type: 'SN/USERS/TOGGLE_IS_FETCHING', isFetching } as const),
+  toggleFollowingProgress: (isFetching: boolean, userId: number) => ({ type: 'SN/USERS/TOGGLE_IS_FOLLOWING_PROGRESS', isFetching, userId } as const)
+}
 
 export const getUsers = (page: number, pageSize: number): ThunkType => {
   return async (dispatch, getState) => {

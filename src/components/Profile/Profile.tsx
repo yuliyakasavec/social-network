@@ -5,7 +5,7 @@ import React from "react";
 
 type PropsType = {
   savePhoto: (v: any) => void
-  saveProfile: (profile: ProfileType) => void
+  saveProfile: (profile: ProfileType) => Promise<any>
   isOwner: boolean
   profile: ProfileType | null
   status: string

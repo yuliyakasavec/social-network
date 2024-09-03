@@ -11,6 +11,7 @@ import { lazy, Suspense, useEffect } from "react";
 import { connect } from "react-redux";
 import { initializeApp } from "./redux/app_reducer";
 import Preloader from "./components/common/Preloader/Preloader";
+import { AppStateType } from "./redux/redux_store";
 
 const DialogsContainer = lazy(() =>
   import("./components/Dialogs/DialogsContainer")
@@ -19,7 +20,12 @@ const ProfileContainer = lazy(() =>
   import("./components/Profile/ProfileContainer")
 );
 
-const App = (props) => {
+type MapPropsType = ReturnType<typeof mapStateToProps>
+type DispatchPropsType = {
+  initializeApp: () => void
+}
+
+const App: React.FC<MapPropsType & DispatchPropsType> = (props) => {
   
   useEffect(() => {
     props.initializeApp();
@@ -68,7 +74,7 @@ const App = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: AppStateType) => {
   return {
     initialized: state.app.initialized,
   };

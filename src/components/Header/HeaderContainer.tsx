@@ -35,4 +35,4 @@ const mapStateToProps = (state: AppStateType) => ({
   isFetching: state.auth.isFetching,
 });
 
-export default connect(mapStateToProps, {logout})(HeaderContainer);
+export default connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {logout})(HeaderContainer);

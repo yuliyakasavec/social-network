@@ -1,7 +1,7 @@
 import classes from "./Post.module.css";
 
 type PropsType = {
-  message: String
+  message: string
   likesCount: number
   id: number
 }

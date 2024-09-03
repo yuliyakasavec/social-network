@@ -7,16 +7,19 @@ import { PostsType } from "../../../types/types";
 const MAX_MESSAGE_LENGTH = 10;
 
 
-type MyPostsType = {
+export type MyPostsType = {
   newPostText: string
 }
 
-type PropsType = {
-  addPost: (newPostText: string) => void
+export type MapMyPostsPropsType = {
   posts: Array<PostsType>
 }
 
-const MyPosts = React.memo((props: PropsType) => {
+export type DispatchMyPostsPropsType = {
+  addPost: (newPostText: string) => void
+}
+
+const MyPosts = React.memo((props: MapMyPostsPropsType & DispatchMyPostsPropsType) => {
 
   let postsElements = props.posts.map((p) => (
     <Post message={p.message} key={p.id} id={p.id} likesCount={p.likesCount} />

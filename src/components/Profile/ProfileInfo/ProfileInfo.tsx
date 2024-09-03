@@ -1,6 +1,6 @@
 import Preloader from "../../common/Preloader/Preloader";
 import classes from "./ProfileInfo.module.css";
-import React, { useRef, useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import ProfileStatusWithHooks from "./ProfileStatusWithHooks";
 import userPhoto from "../../../assets/images/user.png";
 import "react-image-crop/dist/ReactCrop.css";
@@ -8,14 +8,25 @@ import ReactCrop, {
   centerCrop,
   convertToPixelCrop,
   makeAspectCrop,
+  PercentCrop,
 } from "react-image-crop";
 import setCanvasPreview from "./setCanvasPreview";
 import ProfileDataForm from "./ProfileDataForm";
+import { ContactsType, ProfileType } from "../../../types/types";
 
 const ASPECT_RATIO = 1;
 const MIN_DIMENSION = 150;
 
-const ProfileInfo = ({
+type PropsType = {
+  profile: ProfileType | null;
+  status: string;
+  updateStatus: (newStatus: string) => void;
+  isOwner: boolean;
+  savePhoto: (file: File) => void;
+  saveProfile: (profile: ProfileType) => Promise<any>;
+};
+
+const ProfileInfo: React.FC<PropsType> = ({
   profile,
   status,
   updateStatus,
@@ -23,13 +34,13 @@ const ProfileInfo = ({
   savePhoto,
   saveProfile,
 }) => {
-  const imgRef = useRef(null);
-  const previewCanvasRef = useRef(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const [imgSrc, setImgSrc] = useState("");
-  const [crop, setCrop] = useState();
+  const [crop, setCrop] = useState<PercentCrop | null>(null);
   const [error, setError] = useState("");
   const [editMode, setEditMode] = useState(false);
-  const [errorsArray, setErrorsArray] = useState([]);
+  const [errorsArray, setErrorsArray] = useState<string[]>([]);
 
   if (!profile) {
     return <Preloader />;
@@ -37,22 +48,24 @@ const ProfileInfo = ({
 
   const uploadPhoto = () => {
     const canvas = previewCanvasRef.current;
-    canvas.toBlob((blob) => {
-      const file = new File([blob], "image.png", { type: "image/png" });
-      savePhoto(file);
+    canvas?.toBlob((blob) => {
+      if (blob) {
+        const file = new File([blob], "image.png", { type: "image/png" });
+        savePhoto(file);
+      }
     }, "image/png");
     setImgSrc("");
-    setCrop();
+    setCrop(null);
   };
 
-  const onMainPhotoSelected = (e) => {
+  const onMainPhotoSelected = (e: ChangeEvent<HTMLInputElement>) => {
     const reader = new FileReader();
     reader.addEventListener("load", () => {
       const imageElement = new Image();
       const imageUrl = reader.result?.toString() || "";
       imageElement.src = imageUrl;
 
-      imageElement.addEventListener("load", (e) => {
+      imageElement.addEventListener("load", (e: any) => {
         if (error) setError("");
         const { naturalWidth, naturalHeight } = e.currentTarget;
         if (naturalWidth < MIN_DIMENSION || naturalHeight < MIN_DIMENSION) {
@@ -62,10 +75,12 @@ const ProfileInfo = ({
       });
       setImgSrc(imageUrl);
     });
-    reader.readAsDataURL(e.target.files[0]);
+    if (e.target.files) {
+      reader.readAsDataURL(e.target.files[0]);
+    }
   };
 
-  const onImageLoad = (e) => {
+  const onImageLoad = (e: any) => {
     const { width, height } = e.currentTarget;
     const cropWidthInPercent = (MIN_DIMENSION / width) * 100;
     const crop = makeAspectCrop(
@@ -81,10 +96,10 @@ const ProfileInfo = ({
     setCrop(centeredCrop);
   };
 
-  const onSubmit = async (formData) => {
+  const onSubmit = async (formData: ProfileType) => {
     setErrorsArray([]);
     const errorResponse = await saveProfile(formData);
-    if(errorResponse) {
+    if (errorResponse) {
       setErrorsArray(errorResponse);
     } else {
       setEditMode(false);
@@ -104,7 +119,7 @@ const ProfileInfo = ({
           <div className={classes.modalShading}>
             <div className={classes.modal}>
               <ReactCrop
-                crop={crop}
+                crop={crop || undefined}
                 onChange={(pixelCrop, percentCrop) => setCrop(percentCrop)}
                 circularCrop
                 keepSelection
@@ -123,15 +138,17 @@ const ProfileInfo = ({
                 <button
                   className={classes.forButton}
                   onClick={() => {
-                    setCanvasPreview(
-                      imgRef.current,
-                      previewCanvasRef.current,
-                      convertToPixelCrop(
-                        crop,
-                        imgRef.current.width,
-                        imgRef.current.height
-                      )
-                    );
+                    if (crop && imgRef.current) {
+                      setCanvasPreview(
+                        imgRef.current,
+                        previewCanvasRef.current,
+                        convertToPixelCrop(
+                          crop,
+                          imgRef.current.width,
+                          imgRef.current.height
+                        )
+                      );
+                    }
                     uploadPhoto();
                   }}
                 >
@@ -159,7 +176,11 @@ const ProfileInfo = ({
           {isOwner && <input type={"file"} onChange={onMainPhotoSelected} />}
         </div>
         {editMode ? (
-          <ProfileDataForm profile={profile} onSubmit={onSubmit} errorsArray={errorsArray}/>
+          <ProfileDataForm
+            profile={profile}
+            onSubmit={onSubmit}
+            errorsArray={errorsArray}
+          />
         ) : (
           <ProfileData
             goToEditMode={() => {
@@ -169,13 +190,28 @@ const ProfileInfo = ({
             isOwner={isOwner}
           />
         )}
-        <ProfileStatusWithHooks status={status} updateStatus={updateStatus} isOwner={isOwner}/>
+        <ProfileStatusWithHooks
+          status={status}
+          updateStatus={updateStatus}
+          isOwner={isOwner}
+          editMode={editMode}
+        />
       </div>
     </div>
   );
 };
 
-const ProfileData = ({ profile, isOwner, goToEditMode }) => {
+type ProfileDataPropsType = {
+  profile: ProfileType;
+  isOwner: boolean;
+  goToEditMode: () => void;
+};
+
+const ProfileData: React.FC<ProfileDataPropsType> = ({
+  profile,
+  isOwner,
+  goToEditMode,
+}) => {
   return (
     <div>
       {isOwner && (
@@ -204,7 +240,7 @@ const ProfileData = ({ profile, isOwner, goToEditMode }) => {
             <Contact
               key={key}
               contactTitle={key}
-              contactValue={profile.contacts[key]}
+              contactValue={profile.contacts[key as keyof ContactsType]}
             />
           );
         })}
@@ -213,7 +249,15 @@ const ProfileData = ({ profile, isOwner, goToEditMode }) => {
   );
 };
 
-const Contact = ({ contactTitle, contactValue }) => {
+type ContactsPropsType = {
+  contactTitle: string;
+  contactValue: string;
+};
+
+const Contact: React.FC<ContactsPropsType> = ({
+  contactTitle,
+  contactValue,
+}) => {
   return (
     <div className={classes.contact}>
       <b>{contactTitle}</b>: {contactValue}

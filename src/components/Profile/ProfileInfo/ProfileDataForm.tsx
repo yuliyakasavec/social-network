@@ -1,8 +1,15 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import classes from "./ProfileInfo.module.css";
+import { ProfileType } from "../../../types/types";
 
-const ProfileDataForm = ({ profile, onSubmit, errorsArray }) => {
+type ProfileDataFormPropsType = {
+  profile: ProfileType
+  onSubmit: (formData: ProfileType) => Promise<void>
+  errorsArray: string[]
+}
+
+const ProfileDataForm: React.FC<ProfileDataFormPropsType> = ({ profile, onSubmit, errorsArray }) => {
   const {
     register,
     handleSubmit,
@@ -19,6 +26,7 @@ const ProfileDataForm = ({ profile, onSubmit, errorsArray }) => {
       contacts: profile.contacts,
     },
   });
+  
 
   useEffect(() => {
     if (!errorsArray.length) {
@@ -28,6 +36,7 @@ const ProfileDataForm = ({ profile, onSubmit, errorsArray }) => {
         const errorKey = err
           .slice(err.indexOf(">") + 1, err.indexOf(")"))
           .toLocaleLowerCase();
+        //@ts-ignore
         setError("contacts." + errorKey, {
           type: "custom",
           message: err,
@@ -38,6 +47,7 @@ const ProfileDataForm = ({ profile, onSubmit, errorsArray }) => {
 
 
   return (
+    //@ts-ignore
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
         <b>Full name</b>:
@@ -81,13 +91,17 @@ const ProfileDataForm = ({ profile, onSubmit, errorsArray }) => {
                 <b>
                   {key}: <div>
                     <input
+                    //@ts-ignore
                       style={errors.contacts?.[key] ? { borderColor: "red" } : {}}
                       placeholder={key}
+                      //@ts-ignore
                       {...register(fieldName)}
                     />
-                    {errors.contacts?.[key] && (
+                    {//@ts-ignore
+                    errors.contacts?.[key] && (
                       <div style={{ color: "red" }}>
-                        {errors.contacts[key].message}
+                        { //@ts-ignore
+                        errors.contacts[key].message}
                       </div>
                     )}
                   </div>

@@ -4,7 +4,7 @@ import Friends from '../Friends/Friends';
 import { AppStateType } from '../../redux/redux_store';
 
 
-const Navbar = (props: AppStateType) => {
+const Navbar: React.FC = () => {
 
   // let sidebarElements = props.state?.sidebar.map( s => <Friends name={s.name} id={s.id} avatar={s.avatar} />);
 

@@ -19,7 +19,7 @@ type MapDispatchPropsType = {
   getStatus: (userId: number) => void, 
   updateStatus: (status: string) => void, 
   savePhoto: (v: any) => void, 
-  saveProfile: (profile: ProfileType) => void
+  saveProfile: (profile: ProfileType) => Promise<any>
 }
 
 type PropsType = MapStatePropsType & MapDispatchPropsType;
@@ -56,7 +56,7 @@ let mapStateToProps = (state: AppStateType) => ({
   userId: state.auth.userId
 });
 
-export default compose(
+export default compose<React.ComponentType>(
   connect(mapStateToProps, { getUsersProfile, getStatus, updateStatus, savePhoto, saveProfile }),
   withAuthRedirect
 )

@@ -1,16 +1,5 @@
 import { InferActionsTypes } from "./redux_store";
 
-type MessagesType = {
-  id: number
-  message: string
-}
-
-type DialogsType = {
-  id: number
-  name: string
-  avatar: string
-}
-
 let initialState = {
   messages: [
     { id: 1, message: "Hi" },

@@ -3,7 +3,7 @@ import {
   ResultCodeForCaptchaEnum,
   ResultCodesEnum,
 } from "../api/api";
-import { AppStateType, BaseThunkType, InferActionsTypes } from "./redux_store";
+import { BaseThunkType, InferActionsTypes } from "./redux_store";
 import { headerAPI, loginAPI } from "../api/auth-api";
 import { securityAPI } from "../api/security-api";
 

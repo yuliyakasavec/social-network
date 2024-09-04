@@ -1,23 +1,10 @@
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/auth_reducer";
 import { Navigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { AppStateType } from "../../redux/redux_store";
+import { AppDispatch, AppStateType } from "../../redux/redux_store";
 
-type MapStatePropsType = {
-  captchaUrl: string | null
-  isAuth: boolean
-}
-
-type MapDispatchPropsType = {
-  login: (email: string, 
-    password: string,
-    rememberMe: boolean,
-    captcha: null,
-    onServerError: (v: string) => void
-  ) => Promise<void>
-}
 
 type LoginsType = {
   email: string
@@ -27,7 +14,12 @@ type LoginsType = {
   server: string;
 }
 
-const Login: React.FC<MapStatePropsType & MapDispatchPropsType> = (props) => {
+export const Login: React.FC = () => {
+
+  const captchaUrl = useSelector((state: AppStateType) => state.auth.captchaUrl);
+  const isAuth = useSelector((state: AppStateType) => state.auth.isAuth);
+
+  const dispatch: AppDispatch = useDispatch();
 
   const { register, handleSubmit, formState: {
     errors
@@ -45,14 +37,15 @@ const Login: React.FC<MapStatePropsType & MapDispatchPropsType> = (props) => {
   
   const onSubmit = handleSubmit((formData) => {
     clearErrors()
-    props.login(
+    dispatch(login(
       formData.email,
       formData.password,
       formData.rememberMe,
       formData.captcha,
       onServerError
-    );
+    ));
   });
+
 
   useEffect(() => {
     if (errors.server) {
@@ -60,7 +53,7 @@ const Login: React.FC<MapStatePropsType & MapDispatchPropsType> = (props) => {
     }
   }, [watch('email'), watch('password')])
 
-  if (props.isAuth) {
+  if (isAuth) {
     return <Navigate to={"/profile"} />;
   }
 
@@ -99,8 +92,8 @@ const Login: React.FC<MapStatePropsType & MapDispatchPropsType> = (props) => {
         Remember me
       </div>
       {errors.rememberMe && (<div style={{ color: 'red'}}>{errors.rememberMe.message}</div>)}
-      {props.captchaUrl && <img src={props.captchaUrl} />}
-      {props.captchaUrl && <div><input 
+      {captchaUrl && <img src={captchaUrl} />}
+      {captchaUrl && <div><input 
          {...register('captcha')}
           /></div>}
       <div>
@@ -113,10 +106,3 @@ const Login: React.FC<MapStatePropsType & MapDispatchPropsType> = (props) => {
     </div>
   );
 };
-
-const mapStateToProps = (state: AppStateType): MapStatePropsType => ({
-  isAuth: state.auth.isAuth,
-  captchaUrl: state.auth.captchaUrl
-});
-
-export default connect(mapStateToProps, { login })(Login);

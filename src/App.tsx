@@ -4,14 +4,14 @@ import Navbar from "./components/Navbar/Navbar";
 import News from "./components/News/News";
 import Music from "./components/Music/Music";
 import Settings from "./components/Settings/Settings";
-import UsersContainer from "./components/Users/UsersContainer";
+import { UsersPage } from "./components/Users/UsersContainer";
 import HeaderContainer from "./components/Header/HeaderContainer";
-import Login from "./components/Login/Login";
 import { lazy, Suspense, useEffect } from "react";
 import { connect } from "react-redux";
 import { initializeApp } from "./redux/app_reducer";
 import Preloader from "./components/common/Preloader/Preloader";
 import { AppStateType } from "./redux/redux_store";
+import { Login } from "./components/Login/Login";
 
 const DialogsContainer = lazy(() =>
   import("./components/Dialogs/DialogsContainer")
@@ -61,7 +61,7 @@ const App: React.FC<MapPropsType & DispatchPropsType> = (props) => {
             <Route path="/" element={<Navigate to={"/profile"} />} />
             <Route path="/dialogs/*" element={<DialogsContainer />} />
             <Route path="/profile/:userId?" element={<ProfileContainer />} />
-            <Route path="/users/*" element={<UsersContainer pageTitle={"Samurai"} />} />
+            <Route path="/users/*" element={<UsersPage pageTitle={"Samurai"} />} />
             <Route path="/login/*" element={<Login />} />
             <Route path="/news" element={<News />} />
             <Route path="/music" element={<Music />} />

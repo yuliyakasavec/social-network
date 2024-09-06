@@ -1,10 +1,10 @@
-import {Action, AnyAction, applyMiddleware, combineReducers, compose, legacy_createStore as createStore} from "redux"
+import {Action, applyMiddleware, combineReducers, compose, legacy_createStore as createStore} from "redux"
 import profileReducer from "./profile_reducer";
 import dialogsReducer from "./dialogs_reducer";
 import sidebarReducer from "./sidebar_reducer";
 import usersReducer from "./users_reducer";
 import authReducer from "./auth_reducer";
-import {thunk, ThunkAction, ThunkDispatch} from "redux-thunk";
+import {thunk, ThunkAction} from "redux-thunk";
 import appReducer from "./app_reducer";
 
 let rootReducer = combineReducers({

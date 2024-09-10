@@ -1,0 +1,4 @@
+.active-link {
+    color: var(--color-active);
+    cursor: default;
+}

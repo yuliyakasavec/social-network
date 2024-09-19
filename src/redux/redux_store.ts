@@ -6,6 +6,7 @@ import usersReducer from "./users_reducer";
 import authReducer from "./auth_reducer";
 import {thunk, ThunkAction} from "redux-thunk";
 import appReducer from "./app_reducer";
+import chatReducer from "./chat_reducer";
 
 let rootReducer = combineReducers({
     profilePage: profileReducer,
@@ -13,7 +14,8 @@ let rootReducer = combineReducers({
     friendsPage: sidebarReducer,
     usersPage: usersReducer,
     auth: authReducer,
-    app: appReducer
+    app: appReducer,
+    chat: chatReducer
 });
 
 type RootReducerType = typeof rootReducer;

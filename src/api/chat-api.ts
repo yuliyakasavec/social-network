@@ -1,6 +1,13 @@
 import { StatusType } from "../redux/chat_reducer";
 import { outputDateSeconds } from "../utils/object_helpers";
 
+export type ChatMessageAPIType = {
+  message: string;
+  photo: string;
+  userId: number;
+  userName: string;
+};
+
 type MessagesReceivedSubscriberType = (messages: ChatMessageAPIType[]) => void;
 type StatusChangedSubscriberType = (status: StatusType) => void;
 
@@ -13,17 +20,13 @@ let ws: WebSocket | null = null;
 type EventsNamesType = "messages-received" | "status-changed";
 let count = 1;
 
-const closeHandler = () => {
-  console.log("закрылось соединение!", outputDateSeconds());
-  notifySubscribersAboutStatus("pending");
-  setTimeout(createChannel, 2000);
+const notifySubscribersAboutStatus = (status: StatusType) => {
+  subscribers["status-changed"].forEach((s) => s(status));
 };
 
-const messageHandler = (e: MessageEvent) => {
-  const newMessages = JSON.parse(e.data);
-  subscribers["messages-received"].forEach((s) => s(newMessages));
-  notifySubscribersAboutStatus("ready");
-  console.log("получили массив данных с сервера!", outputDateSeconds());
+const errorHandler = () => {
+  notifySubscribersAboutStatus("error");
+  console.log("Ошибка установить соединение!", outputDateSeconds());
 };
 
 const openHandler = () => {
@@ -36,21 +39,25 @@ const openHandler = () => {
   count = count + 1;
 };
 
-const errorHandler = () => {
-  notifySubscribersAboutStatus("error");
-  console.log("Ошибка установить соединение!", outputDateSeconds());
+const messageHandler = (e: MessageEvent) => {
+  const newMessages = JSON.parse(e.data);
+  subscribers["messages-received"].forEach((s) => s(newMessages));
+  notifySubscribersAboutStatus("ready");
+  console.log("получили массив данных с сервера!", outputDateSeconds());
+};
+
+const closeHandler = () => {
+  console.log("закрылось соединение!", outputDateSeconds());
+  notifySubscribersAboutStatus("pending");
+  setTimeout(createChannel, 2000);
 };
 
 const cleanUp = () => {
-  ws?.removeEventListener("close", closeHandler);
-  ws?.removeEventListener("message", messageHandler);
-  ws?.removeEventListener("open", openHandler);
   ws?.removeEventListener("error", errorHandler);
+  ws?.removeEventListener("open", openHandler);
+  ws?.removeEventListener("message", messageHandler);
+  ws?.removeEventListener("close", closeHandler);
   console.log("удалили все подписки!", outputDateSeconds());
-};
-
-const notifySubscribersAboutStatus = (status: StatusType) => {
-  subscribers["status-changed"].forEach((s) => s(status));
 };
 
 function createChannel() {
@@ -70,12 +77,12 @@ function createChannel() {
     ws = new WebSocket(
       "wss://social-network.samuraijs.com/handlers/ChatHandler.ashx"
     );
-    ws.addEventListener("close", closeHandler);
-    ws.addEventListener("message", messageHandler);
-    ws.addEventListener("open", openHandler);
     ws.addEventListener("error", errorHandler);
+    ws.addEventListener("open", openHandler);
+    ws.addEventListener("message", messageHandler);
+    ws.addEventListener("close", closeHandler);
   }, 1000);
-};
+}
 
 export const chatAPI = {
   start() {
@@ -111,13 +118,5 @@ export const chatAPI = {
   },
   sendMessage(message: string) {
     ws?.send(message);
-    createChannel();
   },
-};
-
-export type ChatMessageAPIType = {
-  message: string;
-  photo: string;
-  userId: number;
-  userName: string;
 };

@@ -41,7 +41,7 @@ const Chat: React.FC = () => {
   );
 };
 
-const Messages: React.FC = () => {
+const Messages: React.FC = React.memo(() => {
   const messages = useSelector((state: AppStateType) => state.chat.messages);
   const messagesAnchorRef = useRef<HTMLDivElement>(null);
   const [isAutoScroll, setIsAutoScroll] = useState(true);
@@ -84,7 +84,8 @@ const Messages: React.FC = () => {
       <div ref={messagesAnchorRef}></div>
     </div>
   );
-};
+}
+)
 
 const Message: React.FC<{ message: ChatMessageAPIType }> = React.memo(
   ({ message }) => {
@@ -107,7 +108,7 @@ const AddMessageForm: React.FC = () => {
   const status = useSelector((state: AppStateType) => state.chat.status);
 
   const onChangeHandler = (e: any) => {
-    setMessage(e.currentTarget.value);
+    setMessage(e.target.value);
   };
 
   const isDisabledButton = status !== "ready";
@@ -128,26 +129,24 @@ const AddMessageForm: React.FC = () => {
   const sendMessageHandler = (e: any) => {
     e?.preventDefault();
     if (!message) {
-      alert('Пустое сообщение невозможно отпарвить')
+      alert("Пустое сообщение невозможно отпарвить");
       return;
     }
 
-    const date = new Date()
-      const time = String(
-         date.getHours()
-         + ':' + date.getMinutes()
-      )
+    const date = new Date();
+    const time = String(date.getHours() + ":" + date.getMinutes());
 
-      const messageWithTime = `${message} (${time})`
+    const messageWithTime = `${message} (${time})`;
 
-      if (messageWithTime.length > 100) {
-         alert(
-            `Можно отправлять не более 100 знаков,
-            а сейчас уже ${messageWithTime.length}`)
-         return
-      }
+    if (messageWithTime.length > 100) {
+      alert(
+        `Можно отправлять не более 100 знаков,
+            а сейчас уже ${messageWithTime.length}`
+      );
+      return;
+    }
 
-      console.log('отправили сообщение', outputDateSeconds())
+    console.log("отправили сообщение", outputDateSeconds());
 
     dispatch(sendMessage(messageWithTime));
     setMessage("");
